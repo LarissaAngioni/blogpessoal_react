@@ -1,6 +1,18 @@
-import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import AuthContext from "../../contexts/AuthContext";
 
 function Navbar() {
+  const navigate = useNavigate();
+
+  const { handleLogout } = useContext(AuthContext);
+
+  function logout(){
+    handleLogout();
+    alert("O usuário foi desconectado com sucesso!");
+    navigate("/");
+  }
+
   return (
     <div
       className="flex 
@@ -33,7 +45,7 @@ function Navbar() {
           <li>Temas</li>
           <li>Cadastrar tema</li>
           <li>Perfil</li>
-          <li>Sair</li>
+          <li><Link to='' onClick={logout} className="hover:underline">Sair</Link></li>
         </ul>
       </div>
     </div>
