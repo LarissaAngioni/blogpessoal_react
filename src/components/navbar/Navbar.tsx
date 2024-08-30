@@ -5,13 +5,16 @@ import AuthContext from "../../contexts/AuthContext";
 function Navbar() {
   const navigate = useNavigate();
 
-  const { handleLogout } = useContext(AuthContext);
+  const { usuario, handleLogout } = useContext(AuthContext);
 
   function logout(){
     handleLogout();
     alert("O usuário foi desconectado com sucesso!");
     navigate("/");
   }
+
+  let navbarComponent;
+
 
   return (
     <div
@@ -41,11 +44,15 @@ function Navbar() {
             m-5
           "
         >
-          <li>Postagens</li>
-          <li>Temas</li>
-          <li>Cadastrar tema</li>
-          <li>Perfil</li>
-          <li><Link to='' onClick={logout} className="hover:underline">Sair</Link></li>
+          <li className='hover:underline'>Postagens</li>
+          <li className='hover:underline'>
+          <Link to='/temas'>Temas</Link>
+            </li>
+          <li className='hover:underline'>
+            <Link to="/cadastroTema"> Cadastrar tema </Link>
+            </li> 
+          <li className='hover:underline'>Perfil</li>
+          <li className='hover:underline'><Link to='' onClick={logout} className="hover:underline">Sair</Link></li>
         </ul>
       </div>
     </div>
