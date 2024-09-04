@@ -4,6 +4,7 @@ import Tema from "../../../models/Tema";
 import AuthContext from "../../../contexts/AuthContext";
 import { buscar, deletar } from "../../../services/Service";
 import { RotatingLines } from "react-loader-spinner";
+import { ToastAlerta } from "../../../utils/ToastAlerta";
 
 function DeletarTema() {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ function DeletarTema() {
 
   useEffect(() => {
     if (token === "") {
-      alert("Você precisa estar logado!");
+      ToastAlerta("Você precisa estar logado!", 'info');
       navigate("/");
     }
   }, [token]);
@@ -49,12 +50,12 @@ function DeletarTema() {
       await deletar(`/temas/${id}`, {
         headers: { Authorization: token },
       });
-      alert("O tema foi apagado!");
+      ToastAlerta("O tema foi apagado!", 'sucesso');
     } catch (error: any) {
       if (error.toString().includes("401")) {
         handleLogout();
       } else {
-        alert("Erro ao deletar tema!");
+        ToastAlerta("Erro ao apagar tema!", 'erro');
       }
     }
     setIsLoading(true);

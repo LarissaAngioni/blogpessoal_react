@@ -1,15 +1,10 @@
-import React, {
-  ChangeEvent,
-  FormEvent,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { ChangeEvent, FormEvent, useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Tema from "../../../models/Tema";
 import AuthContext from "../../../contexts/AuthContext";
 import { atualizar, buscar, cadastrar } from "../../../services/Service";
 import { RotatingLines } from "react-loader-spinner";
+import { ToastAlerta } from "../../../utils/ToastAlerta";
 
 function FormTema() {
   const navigate = useNavigate();
@@ -42,7 +37,7 @@ function FormTema() {
 
   useEffect(() => {
     if (token === "") {
-      alert("Você precisa estar logado!");
+      ToastAlerta("Você precisa estar logado!", 'info');
       navigate("/");
     }
   }, [token]);
@@ -64,33 +59,30 @@ function FormTema() {
     setIsLoading(true);
 
     //Checar se é uma atualização ou se é um novo cadastro
-    if(id !== undefined) {
-        try {
-            await atualizar("/temas", tema, setTema, {
-              headers: { Authorization: token },
-            });
-            alert("Tema atualizado com sucesso!");
-          } catch (error: any) {
-            if (error.toString().includes("401")) {
-              handleLogout();
-            }
-          }
-
+    if (id !== undefined) {
+      try {
+        await atualizar("/temas", tema, setTema, {
+          headers: { Authorization: token },
+        });
+        ToastAlerta("Tema atualizado com sucesso!", 'sucesso');
+      } catch (error: any) {
+        if (error.toString().includes("401")) {
+          handleLogout();
+        }
+      }
     } else {
-        try {
-            await cadastrar("/temas", tema, setTema, {
-              headers: { Authorization: token },
-            });
-            alert("Tema cadastrado com sucesso!");
-          } catch (error: any) {
-            if (error.toString().includes("401")) {
-              handleLogout();
-            }
-          }
-
+      try {
+        await cadastrar("/temas", tema, setTema, {
+          headers: { Authorization: token },
+        });
+        ToastAlerta("Tema cadastrado com sucesso!", 'erro');
+      } catch (error: any) {
+        if (error.toString().includes("401")) {
+          handleLogout();
+        }
+      }
     }
 
-    
     setIsLoading(false);
 
     retornar();
@@ -100,7 +92,7 @@ function FormTema() {
     <div className="container flex flex-col items-center justify-center mx-auto">
       <h1 className="text-4xl text-center my-8">
         {id === undefined ? "Cadastrar Tema" : "Editar Tema"}
-        </h1>
+      </h1>
 
       <form onSubmit={gerarNovoTema} className="w-1/2 flex flex-col gap-4">
         <div className="flex flex-col gap-2">
@@ -118,9 +110,17 @@ function FormTema() {
           className="rounded flex justify-center text-slate-100 bg-indigo-400 hover:bg-indigo-800 w-1/2 py-2 mx-auto block"
           type="submit"
         >
-          {isLoading ?
-                        <RotatingLines strokeColor="white"strokeWidth="5"animationDuration="0.75"width="24"visible={true}/> :
-                        <span>{id === undefined ? 'Cadastrar' : 'Atualizar'}</span>}
+          {isLoading ? (
+            <RotatingLines
+              strokeColor="white"
+              strokeWidth="5"
+              animationDuration="0.75"
+              width="24"
+              visible={true}
+            />
+          ) : (
+            <span>{id === undefined ? "Cadastrar" : "Atualizar"}</span>
+          )}
         </button>
       </form>
     </div>
