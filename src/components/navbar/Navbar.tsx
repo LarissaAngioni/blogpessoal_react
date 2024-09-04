@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { ReactNode, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../../contexts/AuthContext";
 
@@ -12,51 +12,39 @@ function Navbar() {
     alert("O usuário foi desconectado com sucesso!");
     navigate("/");
   }
+  
+  let component: ReactNode;
 
-  let navbarComponent;
+  if (usuario.token !== ""){
 
+      component = (
+
+          <div className='flex justify-center bg-indigo-900 py-4 w-full text-white'>
+
+              <div className="flex justify-between text-lg container">
+
+                  <Link to='/home' className="font-bold text-2xl">Blog Pessoal</Link>
+
+                  <div className='flex gap-4'>
+                      <Link to='/postagens' className='hover:underline'>Postagens</Link>
+                      <Link to='/temas' className='hover:underline'>Temas</Link>
+                      <Link to='/cadastrartema' className='hover:underline'>Cadastrar tema</Link>
+                      <Link to='/perfil' className='hover:underline'>Perfil</Link>
+                      <Link to='' onClick={logout} className="hover:underline">
+                          Sair
+                      </Link>
+                  </div>
+              </div>
+          </div>
+
+      )
+  }
 
   return (
-    <div
-      className="flex 
-    bg-indigo-900 
-     text-white
-      "
-    >
-      <div
-        className="
-          pl-10
-          font-bold
-          text-2xl
-          m-5
-        "
-      >
-        <Link to="/home">Blog Pessoal</Link>
-      </div>
-
-      <div className="ml-auto">
-        <ul
-          className="
-            justify-end
-            inline-flex
-            gap-4
-            pr-10
-            m-5
-          "
-        >
-          <li className='hover:underline'>Postagens</li>
-          <li className='hover:underline'>
-          <Link to='/temas'>Temas</Link>
-            </li>
-          <li className='hover:underline'>
-            <Link to="/cadastroTema"> Cadastrar tema </Link>
-            </li> 
-          <li className='hover:underline'>Perfil</li>
-          <li className='hover:underline'><Link to='' onClick={logout} className="hover:underline">Sair</Link></li>
-        </ul>
-      </div>
-    </div>
-  );
+      <>
+          { component }
+      </>
+  )
 }
 
 export default Navbar;
